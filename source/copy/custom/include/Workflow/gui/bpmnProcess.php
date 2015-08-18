@@ -178,15 +178,21 @@ class bpmnProcess extends bpmnBase {
 			$this->id = $wf->uniq_name;
 
 			// Получим все переходы из начального статуса
-			$query = 'select * from wf_events where (deleted = 0) and '
-				. '(status1_id = \'\') and (workflow_id = \'' . $wf->id . '\') '
-				. 'order by sort';
+			$query = "SELECT DISTINCT s2.id as status2_id
+                FROM wf_events e12
+                INNER JOIN wf_statuses s2 ON s2.id = e12.status2_id
+                INNER JOIN wf_events e23 ON s2.id = e23.status1_id
+                WHERE
+                    (e12.status1_id IS NULL OR e12.status1_id = '')
+                    AND e23.workflow_id = '{$wf->id}'
+                    AND e12.deleted = 0
+                    AND e23.deleted = 0
+                ";
 			$result = $db->query($query);
-			$event = BeanFactory::getBean('WFEvents');
 	        while($row = $db->fetchByAssoc($result)) {
-				$event->populateFromRow($row);
-				$this->process_event('', $event->status2_id);
+				$this->process_event('', $row['status2_id']);
 			}
+			$event = BeanFactory::getBean('WFEvents');
 			
 			// Итерационно обработаем все последующие шаги
 			// TODO нужно переделать кусок с использованнием $a
