@@ -10,6 +10,7 @@ require_once("include/MVC/Controller/SugarController.php");
 require_once('data/BeanFactory.php');
 require_once('data/SugarBean.php');
 require_once('custom/include/Workflow/WF_BPMN.php');
+require_once('custom/include/Workflow/WFManager.php');
 
 require_once('custom/include/Workflow/gui/bpmnProcess.php');
 
@@ -227,9 +228,10 @@ class CustomWFWorkflowsController extends WFWorkflowsController {
 				/**
 				 * Извлечем маршрут из таблицы аудита
 				 */		
+				$statusField = WFManager::getBeanStatusField($bean);
 				$query = "select a.date_created, concat(b.first_name, ' ', b.last_name) created_by, a.before_value_string, a.after_value_string "
 					. "from " . $bean->get_audit_table_name() . " a, users b "
-					. "where (a.field_name = 'wf_status') and (a.parent_id = '" . $doc_id . "') and (b.id = a.created_by) "
+					. "where (a.field_name = '{$statusField}') and (a.parent_id = '" . $doc_id . "') and (b.id = a.created_by) "
 					. "order by a.date_created";
 				$res = $db->query($query);
 				while ($row = $db->fetchByAssoc($res)) {
@@ -244,20 +246,20 @@ class CustomWFWorkflowsController extends WFWorkflowsController {
 				/**
 				 * Обработаем текущий статус
 				 */
-				if (!empty($bean->wf_status)) {
+				if (!empty($bean->$statusField)) {
 					/**
 					 * Если стоим на начальном статусе (переходов не было, таблица
 					 * аудита пуста, то обработаем его отдельно
 					 */
 					if (empty($tasks_done)) {
-						add_task($bean->wf_status);
+						add_task($bean->$statusField);
 					}
 					
-					$gate_from = $bean->wf_status . '_gate_from';
+					$gate_from = $bean->$statusField . '_gate_from';
 					if (array_key_exists($gate_from, $tasks_done)) {
 						$current_task = $gate_from;
 					} else {
-						$current_task = $bean->wf_status;
+						$current_task = $bean->$statusField;
 					}
 					unset($gate_from);
 				}
@@ -549,9 +551,10 @@ EOQ;
 				/**
 				 * Извлечем маршрут из таблицы аудита
 				 */		
+				$statusField = WFManager::getBeanStatusField($bean);
 				$query = "select a.date_created, concat(b.first_name, ' ', b.last_name) created_by, a.before_value_string, a.after_value_string "
 					. "from " . $bean->get_audit_table_name() . " a, users b "
-					. "where (a.field_name = 'wf_status') and (a.parent_id = '" . $doc_id . "') and (b.id = a.created_by) "
+					. "where (a.field_name = '{$statusField}') and (a.parent_id = '" . $doc_id . "') and (b.id = a.created_by) "
 					. "order by a.date_created";
 				$res = $db->query($query);
 				while ($row = $db->fetchByAssoc($res)) {
@@ -566,20 +569,20 @@ EOQ;
 				/**
 				 * Обработаем текущий статус
 				 */
-				if (!empty($bean->wf_status)) {
+				if (!empty($bean->$statusField)) {
 					/**
 					 * Если стоим на начальном статусе (переходов не было, таблица
 					 * аудита пуста, то обработаем его отдельно
 					 */
 					if (empty($tasks_done)) {
-						add_task($bean->wf_status);
+						add_task($bean->$statusField);
 					}
 					
-					$gate_from = $bean->wf_status . '_gate_from';
+					$gate_from = $bean->$statusField . '_gate_from';
 					if (array_key_exists($gate_from, $tasks_done)) {
 						$current_task = $gate_from;
 					} else {
-						$current_task = $bean->wf_status;
+						$current_task = $bean->$statusField;
 					}
 					unset($gate_from);
 				}
