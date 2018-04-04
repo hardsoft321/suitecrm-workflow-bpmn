@@ -353,7 +353,8 @@ class bpmnGatewayOut extends bpmnGateway {
 			$bpmn .= "\t\t" . '</exclusiveGateway>' . "\n";
 		} elseif (count($this->tasks) == 0) {
 			$bpmn .= "\t\t" . '<sequenceFlow id="' . $this->process->getId() . '_to__EndProcess_' . $this->process->getId() . '" sourceRef="' . $this->process->getId() . '" targetRef="' . '_EndProcess_' . $this->process->getId() . '" />' . "\n";
-			$bpmn .= "\t\t" . '<endEvent id="' . '_EndProcess_' . $this->process->getId() . '" name="Конец">' . "\n";
+			// $bpmn .= "\t\t" . '<endEvent id="' . '_EndProcess_' . $this->process->getId() . '" name="Конец">' . "\n"; //TODO: перевод
+			$bpmn .= "\t\t" . '<endEvent id="' . '_EndProcess_' . $this->process->getId() . '" name="">' . "\n";
 			$bpmn .= "\t\t\t" . '<incoming>' . $this->process->getId() . '_to__EndProcess_' . $this->process->getId() . '</incoming>' . "\n";
 			$bpmn .= "\t\t" . '</endEvent>' . "\n";					
 		}

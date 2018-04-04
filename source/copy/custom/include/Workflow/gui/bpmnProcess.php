@@ -58,7 +58,8 @@ class bpmnProcess extends bpmnBase {
 			// Создадим специальный нулевой шаг
 			$this->steps[0] = new bpmnStep($this, 0);
 			// Создадим специальную начальную задачу
-			$this->tasks[0] = new bpmnTask($this, '_StartProcess', 'Начало', $this->lines[0]);
+			// $this->tasks[0] = new bpmnTask($this, '_StartProcess', 'Начало', $this->lines[0]); //TODO: перевод
+			$this->tasks[0] = new bpmnTask($this, '_StartProcess', '', $this->lines[0]);
 			// Создадим также первый шаг
 			$this->steps[1] = new bpmnStep($this, 1);
 		}
