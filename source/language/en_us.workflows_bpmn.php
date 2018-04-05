@@ -6,4 +6,4 @@ $mod_strings['LBL_BPMN_H_BUTTON']  = 'Horizontal';
 $mod_strings['LBL_BPMN_HL_BUTTON'] = 'Horizontal graph';
 $mod_strings['LBL_BPMN_V_BUTTON']  = 'Vertical';
 $mod_strings['LBL_BPMN_VL_BUTTON'] = 'Vertical graph';
-$mod_strings['LBL_BPMN_TITLE']     = 'Workflow graph';
+$mod_strings['LBL_BPMN_TITLE']     = 'BPMN diagram';
